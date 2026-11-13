@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Katalog Link Google Drive — Trakteer</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --surface-subtle: #f8fafc;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: #2563eb;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --drive: #0f9d58;
+      --drive-hover: #0b8043;
+      --drive-soft: #ecfdf5;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-subtle: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --border-focus: #3b82f6;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-soft: rgba(59, 130, 246, 0.15);
+      --drive: #10b981;
+      --drive-hover: #059669;
+      --drive-soft: rgba(16, 185, 129, 0.15);
+      --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px 16px 60px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .brand h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .stat-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-pill strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .step-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .step-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-badge {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .step-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .title-image-container {
+      display: flex;
+      justify-content: center;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-subtle);
+    }
+
+    .title-image {
+      display: block;
+      max-width: 100%;
+      max-height: 360px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .title-image[hidden],
+    .title-image-empty[hidden] {
+      display: none;
+    }
+
+    .title-image-empty {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      background: var(--surface-subtle);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="text"] {
+      padding: 11px 40px 11px 40px;
+    }
+
+    select {
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+      background: var(--surface);
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clear-btn:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .select-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .nav-btn {
+      background: var(--surface-subtle);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .chip {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    /* Action Box */
+    .action-box {
+      background: var(--drive-soft);
+      border: 1.5px solid rgba(16, 185, 129, 0.35);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .selected-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .selected-title-tag {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--drive);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .selected-file-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .selected-url-preview {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      word-break: break-all;
+      background: var(--surface);
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-drive {
+      background: var(--drive);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 11px 20px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(15, 157, 88, 0.25);
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-drive:hover {
+      background: var(--drive-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-drive.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .btn-copy {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 11px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* File List Table/Cards */
+    .list-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .list-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 440px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .file-item:hover {
+      border-color: var(--primary);
+    }
+
+    .file-item.active {
+      border-color: var(--drive);
+      background: var(--drive-soft);
+    }
+
+    .file-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .file-num {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      min-width: 28px;
+      height: 26px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .file-item.active .file-num {
+      background: var(--drive);
+      color: #fff;
+      border-color: var(--drive);
+    }
+
+    .file-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .file-item-link {
+      flex-shrink: 0;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--drive);
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transition: all 0.15s ease;
+    }
+
+    .file-item-link:hover {
+      background: var(--drive);
+      color: #fff;
+      border-color: var(--drive);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 28px 16px;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    #csvInput {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 16px;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+      .btn-drive, .btn-copy {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--drive)">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          Katalog Link Google Drive
+        </h1>
+        <p>Cari judul, pilih episode/file, dan langsung buka tautan Google Drive.</p>
+      </div>
+      <div class="header-actions">
+        <input type="file" id="csvInput" accept=".csv" />
+        <button type="button" class="btn-ghost" id="uploadCsvBtn" title="Muat file hasil_gdrive_dengan_title.csv versi terbaru">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Muat CSV Baru
+        </button>
+        <button type="button" class="btn-ghost" id="themeToggle" title="Ganti tema terang/gelap">
+          🌓 Tema
+        </button>
+      </div>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat-pill">Total Title: <strong id="totalTitlesCount">0</strong></div>
+      <div class="stat-pill">Total File: <strong id="totalFilesCount">0</strong></div>
+      <div class="stat-pill">Hasil Pencarian Title: <strong id="filteredTitlesCount">0</strong></div>
+    </div>
+
+    <div class="card">
+      <!-- PENCARIAN TITLE -->
+      <div class="field-group">
+        <div class="step-label">
+          <span class="step-title"><span class="step-badge">1</span> Pencarian Title</span>
+          <span class="step-hint">Tekan <code>/</code> untuk cepat mencari</span>
+        </div>
+        <div class="search-wrapper">
+          <span class="search-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          <input type="text" id="titleSearch" placeholder="Ketik kata kunci title (contoh: Hakone, VIVANT, Episode)..." autocomplete="off" />
+          <button type="button" class="clear-btn" id="clearSearchBtn" title="Hapus pencarian">✕</button>
+        </div>
+      </div>
+
+      <!-- DROPDOWN TITLE -->
+      <div class="field-group">
+        <div class="step-label">
+          <span class="step-title"><span class="step-badge">2</span> Pilih Title</span>
+          <span class="step-hint" id="titleDropdownInfo">Menampilkan semua title</span>
+        </div>
+        <div class="select-row">
+          <button type="button" class="nav-btn" id="prevTitleBtn" title="Title sebelumnya">←</button>
+          <select id="titleSelect" aria-label="Pilih Title"></select>
+          <button type="button" class="nav-btn" id="nextTitleBtn" title="Title berikutnya">→</button>
+        </div>
+      </div>
+
+      <!-- GAMBAR TITLE -->
+      <div class="field-group">
+        <div class="step-label">
+          <span class="step-title"><span class="step-badge">3</span> Gambar Title</span>
+          <span class="step-hint" id="titleImageInfo">Memuat data gambar...</span>
+        </div>
+        <div class="title-image-container">
+          <img id="titleImage" class="title-image" alt="" hidden />
+          <div id="titleImageEmpty" class="title-image-empty">Pilih title untuk melihat gambar.</div>
+        </div>
+      </div>
+
+      <!-- DROPDOWN JUDUL_FILE -->
+      <div class="field-group">
+        <div class="step-label">
+          <span class="step-title"><span class="step-badge">4</span> Pilih Judul File</span>
+          <span class="step-hint" id="fileCountInfo">0 file tersedia</span>
+        </div>
+        <div class="filter-chips" id="qualityChips"></div>
+        <select id="fileSelect" aria-label="Pilih Judul File"></select>
+      </div>
+
+      <!-- TOMBOL LINK GOOGLE DRIVE -->
+      <div class="field-group">
+        <div class="action-box">
+          <div class="selected-meta">
+            <span class="selected-title-tag" id="selectedTitleLabel">—</span>
+            <div class="selected-file-name" id="selectedFileLabel">Pilih judul file terlebih dahulu</div>
+            <div class="selected-url-preview" id="selectedUrlPreview">https://drive.google.com/...</div>
+          </div>
+          <div class="action-buttons">
+            <a id="openDriveBtn" class="btn-drive disabled" href="#" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Buka Link Google Drive
+            </a>
+            <button type="button" id="copyLinkBtn" class="btn-copy">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              Salin Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAFTAR LENGKAP FILE UNTUK TITLE AKTIF -->
+    <div class="card">
+      <div class="list-header">
+        <h2 id="listHeading">Daftar File pada Title Terpilih</h2>
+        <span class="step-hint">Klik baris untuk memilih atau tombol Buka untuk langsung menuju Google Drive</span>
+      </div>
+      <div class="file-list" id="fileListContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    let catalog = [];
+    let filteredCatalog = [...catalog];
+    let currentTitleFiles = [];
+    let filteredTitleFiles = [];
+    let activeQualityFilter = "ALL";
+    let selectedFileIndex = 0;
+    let titleImages = new Map();
+    let titleImageLoadState = "loading";
+
+    const titleSearchEl = document.getElementById("titleSearch");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+    const titleSelectEl = document.getElementById("titleSelect");
+    const prevTitleBtn = document.getElementById("prevTitleBtn");
+    const nextTitleBtn = document.getElementById("nextTitleBtn");
+    const fileSelectEl = document.getElementById("fileSelect");
+    const qualityChipsEl = document.getElementById("qualityChips");
+    const fileListContainer = document.getElementById("fileListContainer");
+    const titleImageEl = document.getElementById("titleImage");
+    const titleImageEmptyEl = document.getElementById("titleImageEmpty");
+    const titleImageInfoEl = document.getElementById("titleImageInfo");
+
+    const totalTitlesCountEl = document.getElementById("totalTitlesCount");
+    const totalFilesCountEl = document.getElementById("totalFilesCount");
+    const filteredTitlesCountEl = document.getElementById("filteredTitlesCount");
+    const titleDropdownInfoEl = document.getElementById("titleDropdownInfo");
+    const fileCountInfoEl = document.getElementById("fileCountInfo");
+    const listHeadingEl = document.getElementById("listHeading");
+
+    const selectedTitleLabelEl = document.getElementById("selectedTitleLabel");
+    const selectedFileLabelEl = document.getElementById("selectedFileLabel");
+    const selectedUrlPreviewEl = document.getElementById("selectedUrlPreview");
+    const openDriveBtn = document.getElementById("openDriveBtn");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+
+    // Theme management
+    const savedTheme = localStorage.getItem("gdrive_catalog_theme");
+    if (savedTheme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      if (isDark) {
+        document.documentElement.removeAttribute("data-theme");
+        localStorage.setItem("gdrive_catalog_theme", "light");
+      } else {
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("gdrive_catalog_theme", "dark");
+      }
+    });
+
+    function updateGlobalStats() {
+      const totalTitles = catalog.length;
+      const totalFiles = catalog.reduce((sum, item) => sum + item[1].length, 0);
+      totalTitlesCountEl.textContent = totalTitles.toLocaleString("id-ID");
+      totalFilesCountEl.textContent = totalFiles.toLocaleString("id-ID");
+    }
+
+    function renderTitleDropdown() {
+      const query = titleSearchEl.value.trim().toLowerCase();
+      clearSearchBtn.style.display = query ? "flex" : "none";
+
+      if (!query) {
+        filteredCatalog = [...catalog];
+      } else {
+        const keywords = query.split(/\s+/);
+        filteredCatalog = catalog.filter(([title]) => {
+          const lower = title.toLowerCase();
+          return keywords.every(kw => lower.includes(kw));
+        });
+      }
+
+      filteredTitlesCountEl.textContent = filteredCatalog.length.toLocaleString("id-ID");
+      titleDropdownInfoEl.textContent = query
+        ? `Menampilkan ${filteredCatalog.length} hasil untuk "${titleSearchEl.value.trim()}"`
+        : `Menampilkan semua (${catalog.length}) title`;
+
+      titleSelectEl.innerHTML = "";
+
+      if (filteredCatalog.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "— Tidak ada title yang cocok —";
+        titleSelectEl.appendChild(opt);
+        titleSelectEl.disabled = true;
+        prevTitleBtn.disabled = true;
+        nextTitleBtn.disabled = true;
+        onTitleChanged(-1);
+        return;
+      }
+
+      titleSelectEl.disabled = false;
+      const frag = document.createDocumentFragment();
+      filteredCatalog.forEach(([title, files], idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        opt.textContent = `${title} (${files.length} file)`;
+        frag.appendChild(opt);
+      });
+      titleSelectEl.appendChild(frag);
+      titleSelectEl.selectedIndex = 0;
+      onTitleChanged(0);
+    }
+
+    function detectQualities(files) {
+      const qualities = [];
+      const patterns = [
+        { label: "FHD", regex: /(?:^|[.\-_\s\[])FHD(?:$|[.\-_\s\]])/i },
+        { label: "HD", regex: /(?:^|[.\-_\s\[])HD(?:$|[.\-_\s\]])/i },
+        { label: "Mini-HD", regex: /Mini[\-_\s]?HD/i },
+        { label: "SD", regex: /(?:^|[.\-_\s\[])SD(?:$|[.\-_\s\]])/i }
+      ];
+      patterns.forEach(p => {
+        if (files.some(([name]) => matchesQuality(name, p))) {
+          qualities.push(p);
+        }
+      });
+      return qualities;
+    }
+
+    function matchesQuality(fileName, quality) {
+      if (quality.label === "HD" && /Mini[\-_\s]?HD/i.test(fileName)) {
+        return false;
+      }
+      return quality.regex.test(fileName);
+    }
+
+    function renderQualityChips(files) {
+      qualityChipsEl.innerHTML = "";
+      const detected = detectQualities(files);
+      if (detected.length <= 1) return;
+
+      const allChip = document.createElement("button");
+      allChip.type = "button";
+      allChip.className = "chip" + (activeQualityFilter === "ALL" ? " active" : "");
+      allChip.textContent = `Semua (${files.length})`;
+      allChip.addEventListener("click", () => {
+        activeQualityFilter = "ALL";
+        applyFileFilter();
+      });
+      qualityChipsEl.appendChild(allChip);
+
+      detected.forEach(p => {
+        const count = files.filter(([name]) => matchesQuality(name, p)).length;
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip" + (activeQualityFilter === p.label ? " active" : "");
+        chip.textContent = `${p.label} (${count})`;
+        chip.addEventListener("click", () => {
+          activeQualityFilter = p.label;
+          applyFileFilter();
+        });
+        qualityChipsEl.appendChild(chip);
+      });
+    }
+
+    function normalizeTitle(title) {
+      return title
+        .replace(/\s*[-\u2013\u2014~]\s*(?:episode|ep|week)\s*\d*.*$/i, "")
+        .replace(/\s+(?:episode|ep)\s*\d+.*$/i, "")
+        .trim()
+        .toLocaleLowerCase("id-ID");
+    }
+
+    function updateTitleImage(title) {
+      titleImageEl.hidden = true;
+      titleImageEl.removeAttribute("src");
+      titleImageEmptyEl.hidden = false;
+
+      if (!title) {
+        titleImageInfoEl.textContent = "Pilih title untuk melihat gambar";
+        titleImageEmptyEl.textContent = "Pilih title untuk melihat gambar.";
+        return;
+      }
+
+      const imageUrl = titleImages.get(normalizeTitle(title));
+      if (!imageUrl) {
+        titleImageInfoEl.textContent = titleImageLoadState === "loading"
+          ? "Memuat data gambar..."
+          : titleImageLoadState === "error"
+            ? "CSV gambar tidak dapat dimuat"
+            : "Gambar tidak tersedia";
+        titleImageEmptyEl.textContent = titleImageLoadState === "loading"
+          ? "Memuat gambar title..."
+          : titleImageLoadState === "error"
+            ? "Pastikan trakteer_reward_tiers_LENGKAP.csv tersedia di folder yang sama."
+            : "Gambar untuk title ini tidak ditemukan.";
+        return;
+      }
+
+      titleImageInfoEl.textContent = "Memuat gambar...";
+      titleImageEmptyEl.textContent = "Memuat gambar title...";
+      titleImageEl.alt = `Gambar ${title}`;
+      titleImageEl.onload = () => {
+        titleImageEl.hidden = false;
+        titleImageEmptyEl.hidden = true;
+        titleImageInfoEl.textContent = "Gambar title terpilih";
+      };
+      titleImageEl.onerror = () => {
+        titleImageEl.hidden = true;
+        titleImageInfoEl.textContent = "Gambar gagal dimuat";
+        titleImageEmptyEl.textContent = "URL gambar tidak dapat dibuka.";
+      };
+      titleImageEl.src = imageUrl;
+    }
+
+    function onTitleChanged(filteredIdx) {
+      prevTitleBtn.disabled = filteredIdx <= 0;
+      nextTitleBtn.disabled = filteredIdx < 0 || filteredIdx >= filteredCatalog.length - 1;
+
+      if (filteredIdx < 0 || !filteredCatalog[filteredIdx]) {
+        updateTitleImage("");
+        currentTitleFiles = [];
+        filteredTitleFiles = [];
+        fileSelectEl.innerHTML = '<option value="">— Pilih title terlebih dahulu —</option>';
+        fileSelectEl.disabled = true;
+        qualityChipsEl.innerHTML = "";
+        fileCountInfoEl.textContent = "0 file tersedia";
+        listHeadingEl.textContent = "Daftar File";
+        fileListContainer.innerHTML = '<div class="empty-state">Tidak ada file untuk ditampilkan.</div>';
+        updateSelectedFileAction(null, null);
+        return;
+      }
+
+      const [title, files] = filteredCatalog[filteredIdx];
+      updateTitleImage(title);
+      currentTitleFiles = files;
+      activeQualityFilter = "ALL";
+      listHeadingEl.textContent = `Daftar File: ${title}`;
+      applyFileFilter();
+    }
+
+    function applyFileFilter() {
+      renderQualityChips(currentTitleFiles);
+
+      if (activeQualityFilter === "ALL") {
+        filteredTitleFiles = [...currentTitleFiles];
+      } else {
+        const detected = detectQualities(currentTitleFiles);
+        const target = detected.find(d => d.label === activeQualityFilter);
+        filteredTitleFiles = target
+          ? currentTitleFiles.filter(([name]) => matchesQuality(name, target))
+          : [...currentTitleFiles];
+      }
+
+      fileCountInfoEl.textContent = `${filteredTitleFiles.length} file tersedia`;
+      fileSelectEl.innerHTML = "";
+
+      if (filteredTitleFiles.length === 0) {
+        fileSelectEl.innerHTML = '<option value="">— Tidak ada file —</option>';
+        fileSelectEl.disabled = true;
+        fileListContainer.innerHTML = '<div class="empty-state">Tidak ada file yang cocok.</div>';
+        updateSelectedFileAction(null, null);
+        return;
+      }
+
+      fileSelectEl.disabled = false;
+      const frag = document.createDocumentFragment();
+      filteredTitleFiles.forEach(([fileName], idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        opt.textContent = `${idx + 1}. ${fileName}`;
+        frag.appendChild(opt);
+      });
+      fileSelectEl.appendChild(frag);
+      selectedFileIndex = 0;
+      fileSelectEl.selectedIndex = 0;
+      syncSelection(0);
+    }
+
+    function syncSelection(idx) {
+      selectedFileIndex = idx;
+      fileSelectEl.value = String(idx);
+
+      const currentTitle = filteredCatalog[Number(titleSelectEl.value)]?.[0] || "";
+      const filePair = filteredTitleFiles[idx];
+      updateSelectedFileAction(currentTitle, filePair);
+      renderFileList();
+    }
+
+    function updateSelectedFileAction(title, filePair) {
+      if (!filePair) {
+        selectedTitleLabelEl.textContent = "—";
+        selectedFileLabelEl.textContent = "Belum ada file terpilih";
+        selectedUrlPreviewEl.textContent = "—";
+        openDriveBtn.href = "#";
+        openDriveBtn.classList.add("disabled");
+        return;
+      }
+
+      const [fileName, link] = filePair;
+      selectedTitleLabelEl.textContent = title;
+      selectedFileLabelEl.textContent = fileName;
+      selectedUrlPreviewEl.textContent = link;
+      openDriveBtn.href = link;
+      openDriveBtn.classList.remove("disabled");
+    }
+
+    function renderFileList() {
+      fileListContainer.innerHTML = "";
+      if (filteredTitleFiles.length === 0) return;
+
+      const frag = document.createDocumentFragment();
+      filteredTitleFiles.forEach(([fileName, link], idx) => {
+        const row = document.createElement("div");
+        row.className = "file-item" + (idx === selectedFileIndex ? " active" : "");
+
+        const left = document.createElement("div");
+        left.className = "file-item-left";
+
+        const num = document.createElement("span");
+        num.className = "file-num";
+        num.textContent = String(idx + 1);
+
+        const name = document.createElement("span");
+        name.className = "file-name";
+        name.textContent = fileName;
+
+        left.appendChild(num);
+        left.appendChild(name);
+
+        const extLink = document.createElement("a");
+        extLink.className = "file-item-link";
+        extLink.href = link;
+        extLink.target = "_blank";
+        extLink.rel = "noopener noreferrer";
+        extLink.textContent = "Buka ↗";
+        extLink.addEventListener("click", (e) => {
+          e.stopPropagation();
+          syncSelection(idx);
+        });
+
+        row.addEventListener("click", () => {
+          syncSelection(idx);
+        });
+
+        row.appendChild(left);
+        row.appendChild(extLink);
+        frag.appendChild(row);
+      });
+      fileListContainer.appendChild(frag);
+    }
+
+    // Event listeners
+    titleSearchEl.addEventListener("input", renderTitleDropdown);
+
+    clearSearchBtn.addEventListener("click", () => {
+      titleSearchEl.value = "";
+      titleSearchEl.focus();
+      renderTitleDropdown();
+    });
+
+    titleSelectEl.addEventListener("change", () => {
+      const idx = Number(titleSelectEl.value);
+      onTitleChanged(idx);
+    });
+
+    prevTitleBtn.addEventListener("click", () => {
+      const idx = Number(titleSelectEl.value);
+      if (idx > 0) {
+        titleSelectEl.selectedIndex = idx - 1;
+        onTitleChanged(idx - 1);
+      }
+    });
+
+    nextTitleBtn.addEventListener("click", () => {
+      const idx = Number(titleSelectEl.value);
+      if (idx < filteredCatalog.length - 1) {
+        titleSelectEl.selectedIndex = idx + 1;
+        onTitleChanged(idx + 1);
+      }
+    });
+
+    fileSelectEl.addEventListener("change", () => {
+      const idx = Number(fileSelectEl.value);
+      syncSelection(idx);
+    });
+
+    copyLinkBtn.addEventListener("click", async () => {
+      const url = selectedUrlPreviewEl.textContent;
+      if (!url || !url.startsWith("http")) return;
+      try {
+        await navigator.clipboard.writeText(url);
+        const orig = copyLinkBtn.innerHTML;
+        copyLinkBtn.textContent = "✓ Link Tersalin!";
+        setTimeout(() => {
+          copyLinkBtn.innerHTML = orig;
+        }, 1600);
+      } catch (err) {
+        alert("Gagal menyalin otomatis. Silakan salin manual dari kotak URL.");
+      }
+    });
+
+    // Shortcut '/' untuk fokus pencarian
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "/" && document.activeElement !== titleSearchEl) {
+        e.preventDefault();
+        titleSearchEl.focus();
+        titleSearchEl.select();
+      }
+    });
+
+    // Fitur opsional: Muat ulang dari file CSV baru jika di-update
+    document.getElementById("uploadCsvBtn").addEventListener("click", () => {
+      document.getElementById("csvInput").click();
+    });
+
+    document.getElementById("csvInput").addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const text = ev.target.result;
+        const parsed = parseCSVToCatalog(text);
+        if (parsed.length === 0) {
+          alert("Format CSV tidak sesuai atau tidak ditemukan kolom 'title', 'judul_file', dan 'link_google_drive'.");
+          return;
+        }
+        catalog = parsed;
+        titleSearchEl.value = "";
+        updateGlobalStats();
+        renderTitleDropdown();
+        alert(`Berhasil memuat ${catalog.length} title dari file CSV baru!`);
+      };
+      reader.readAsText(file, "UTF-8");
+    });
+
+    function parseCSVLine(line) {
+      const res = [];
+      let cur = "";
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            cur += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === "," && !inQuotes) {
+          res.push(cur);
+          cur = "";
+        } else {
+          cur += ch;
+        }
+      }
+      res.push(cur);
+      return res;
+    }
+
+    function parseCSVToCatalog(csvText) {
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 2) return [];
+      const headers = parseCSVLine(lines[0]).map(h => h.trim());
+      const titleIdx = headers.indexOf("title");
+      const fileIdx = headers.indexOf("judul_file");
+      const linkIdx = headers.indexOf("link_google_drive");
+      if (titleIdx === -1 || fileIdx === -1 || linkIdx === -1) return [];
+
+      const map = new Map();
+      const seen = new Set();
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseCSVLine(lines[i]);
+        const t = (cols[titleIdx] || "").trim();
+        const f = (cols[fileIdx] || "").trim();
+        const l = (cols[linkIdx] || "").trim();
+        if (!t || !f || !l) continue;
+        const key = `${t}|||${f}|||${l}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        if (!map.has(t)) map.set(t, []);
+        map.get(t).push([f, l]);
+      }
+      return Array.from(map.entries()).sort(([titleA], [titleB]) =>
+        titleA.localeCompare(titleB, "id", { sensitivity: "base" })
+      );
+    }
+
+    async function loadTitleImagesFromCsv() {
+      try {
+        const response = await fetch("./trakteer_reward_tiers_LENGKAP.csv", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const lines = (await response.text()).split(/\r?\n/).filter(line => line.trim().length > 0);
+        if (lines.length < 2) {
+          throw new Error("CSV gambar kosong");
+        }
+
+        const headers = parseCSVLine(lines[0]).map(header => header.replace(/^\uFEFF/, "").trim());
+        const titleIdx = headers.indexOf("title");
+        const imageIdx = headers.indexOf("image");
+        if (titleIdx === -1 || imageIdx === -1) {
+          throw new Error("Kolom title atau image tidak ditemukan");
+        }
+
+        const images = new Map();
+        for (let i = 1; i < lines.length; i++) {
+          const cols = parseCSVLine(lines[i]);
+          const title = (cols[titleIdx] || "").trim();
+          const imageUrl = (cols[imageIdx] || "").trim();
+          if (!title || !/^https?:\/\//i.test(imageUrl)) continue;
+          images.set(normalizeTitle(title), imageUrl);
+        }
+        if (images.size === 0) {
+          throw new Error("Tidak ada URL gambar yang valid");
+        }
+
+        titleImages = images;
+        titleImageLoadState = "loaded";
+      } catch (error) {
+        console.error("Gagal memuat gambar dari trakteer_reward_tiers_LENGKAP.csv:", error);
+        titleImageLoadState = "error";
+      }
+
+      const selectedTitle = filteredCatalog[Number(titleSelectEl.value)]?.[0] || "";
+      updateTitleImage(selectedTitle);
+    }
+
+    async function loadCatalogFromCsv() {
+      try {
+        const response = await fetch("./hasil_gdrive_dengan_title.csv", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const parsed = parseCSVToCatalog(await response.text());
+        if (parsed.length === 0) {
+          throw new Error("CSV kosong atau format kolomnya tidak sesuai");
+        }
+
+        catalog = parsed;
+        updateGlobalStats();
+        renderTitleDropdown();
+      } catch (error) {
+        console.error("Gagal memuat hasil_gdrive_dengan_title.csv:", error);
+        titleDropdownInfoEl.textContent = "CSV belum dimuat";
+        fileListContainer.innerHTML = '<div class="empty-state">CSV tidak dapat dimuat otomatis. Jalankan halaman melalui server lokal atau klik “Muat CSV Baru” untuk memilih file CSV.</div>';
+      }
+    }
+
+    // Inisialisasi awal
+    updateGlobalStats();
+    renderTitleDropdown();
+    loadCatalogFromCsv();
+    loadTitleImagesFromCsv();
+  </script>
+</body>
+</html>
